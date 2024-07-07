@@ -21,31 +21,30 @@ function App() {
     if (storedTasks) {
       console.log("Tasks parsed", JSON.parse(storedTasks));
       setTasks(JSON.parse(storedTasks));
-    }else{
-      setTasks([]); 
+    } else {
+      setTasks([]);
     }
   };
 
   const handleFormSubmit = (data) => {
-    console.log('Data received from child:', data);
+    console.log("Data received from child:", data);
     if (data.index === undefined) {
       localStorage.setItem("tasks", JSON.stringify([...tasks, data]));
-    } else{
+    } else {
       tasks[data.index] = data;
       localStorage.setItem("tasks", JSON.stringify(tasks));
     }
-    load()
-    setFormOpen(false)
+    load();
+    setFormOpen(false);
   };
 
-  const editTask = (index , data) => {
-    setFormOpen(true)
-    setEdit({...data,index: index});
-    console.log('Data for edit:', data);
-    console.log('Data for edit:', edit);
+  const editTask = (index, data) => {
+    setFormOpen(true);
+    setEdit({ ...data, index: index });
+    console.log("Data for edit:", data);
+    console.log("Data for edit:", edit);
   };
 
-  
   const deleteTask = (index) => {
     tasks.splice(index, 1);
     localStorage.setItem("tasks", JSON.stringify(tasks));
@@ -59,16 +58,22 @@ function App() {
 
   //button on click must be on a arrow function to not be called on render
   return (
-    <>
-    {formOpen?
-    <TaskForm onSubmit={handleFormSubmit} data={edit} />
-    :
-    tasks?.map((task, index) => (
-      <TaskCard key={index} task={task} index={index} edit={editTask} deleteTask={deleteTask} />
-    ))
-  }
-      <button onClick={() => newTask()}> new </button>
-    </>
+    <div className="container">
+      {!formOpen && <button className="newBtn" onClick={() => newTask()}> new </button>}
+      {formOpen ? (
+        <TaskForm onSubmit={handleFormSubmit} data={edit} />
+      ) : (
+        tasks?.map((task, index) => (
+          <TaskCard
+            key={index}
+            task={task}
+            index={index}
+            edit={editTask}
+            deleteTask={deleteTask}
+          />
+        ))
+      )}
+    </div>
   );
 }
 
